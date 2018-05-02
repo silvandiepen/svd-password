@@ -13,11 +13,7 @@ header{ padding: grid(1); }
 </style>
 
 <script>
-import headings from '~/static/head.json';
 // import Footer from 'svd-footer'
-
-
 export default{
-	head: headings
 }
 </script>
