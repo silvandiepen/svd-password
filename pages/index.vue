@@ -350,13 +350,13 @@ export default {
         }
       }
       h3{
-        position: absolute; left: 50%; top: 50%; transform: translate(-50%,200%); width: 100%; text-align: center; color: white; 
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%,50vh); width: 100%; text-align: center; color: white; 
         text-shadow: .1rem .1rem .5rem color(Black,.25); 
         animation: comeUp .3s .5s forwards;
         @at-root{
           @keyframes comeUp {
             0%{
-              transform: translate(-50%,200%);
+              transform: translate(-50%,50vh);
             }            
             100%{
               transform: translate(-50%,-50%);
