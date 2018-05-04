@@ -28,7 +28,7 @@ module.exports = {
       src: "~/plugins/vue-clipboard"
     }
   ],
-  modules: ["nuxt-rfg-icon", "@nuxtjs/manifest"],
+  modules: ["nuxt-rfg-icon", "@nuxtjs/manifest", "@nuxtjs/pwa"],
   /*
   ** Customize the progress bar color
   */
