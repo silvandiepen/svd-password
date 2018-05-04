@@ -22,8 +22,9 @@
     "pug": "^2.0.3",
     "sass-loader": "^7.0.1",
     "svd-footer": "0.0.5",
-    "svd-style": "^1.5.23",
-    "svd-vue-components": "^0.1.5"
+    "svd-style": "^1.5.24",
+    "svd-vue-components": "^0.1.5",
+    "vue-clipboard2": "^0.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

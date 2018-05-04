@@ -23,6 +23,9 @@ module.exports = {
   plugins: [
     {
       src: "~/plugins/svd-vue-components"
+    },
+    {
+      src: "~/plugins/vue-clipboard"
     }
   ],
   modules: ["nuxt-rfg-icon", "@nuxtjs/manifest"],

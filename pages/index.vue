@@ -3,6 +3,11 @@
     <column medium="two-third">
       <section class="view basic">
         <div class="password" v-if="password">
+          <div :class="[{ copied: isCopied }, 'overlay']" @mouseleave="isCopied = false">
+            {{isCopied}}
+            <button class="button--rounded" v-on:click="generatePassword">&#8635; Refresh</button>
+            <button class="button--rounded" v-clipboard:copy="password" v-clipboard:success="isCopied = true">&#x1f4cb; Copy to clipboard</button>
+          </div>
           {{password}}
         </div>
       </section>
@@ -13,7 +18,7 @@
             <fieldset>
               <label>length</label>
               <span class="range">
-                <span class="range__amount">{{settings.length}}</span>
+                <span class="range__amount">{{settings.totalChars}}</span>
                 <input class="range__slider" type="range" min="0" max="256" v-model="settings.length">
               </span>
             </fieldset>
@@ -84,129 +89,220 @@
 </template>
 
 <script>
-  export default{
-    data(){
-      return{
-        password: '',
-        settings: {
-          letters: true,
-          letters_total: 100,
-          numbers: false,
-          numbers_total: 0,
-          special: false,
-          length: 8,
-          capitals: 0,
-        },
-        characters:{
-          letters: ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','v','q','v','r','s','t','u','v','v','w','v','x','y','z'],
-          vowel: ['a','e','i','o','u','y'],
-          numbers: ['1','2','3','4','5','6','7','8','9','0'],
-          special: ['!','@','#','$','%','ˆ','&','*','(',')','?','>','<']
-        }
-      }
-    },
-    methods: {
-      randomNumber: function getRandomInt(max) {
-        let min = 0;
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-      },
-      generatePassword: function(_this){
-        let password = '';
-        let i=0;
-        while (i < _this.settings.length) {
-          let char = '';
-
-          // If only letters
-          if(_this.settings.letters && !_this.settings.numbers && !_this.settings.special){
-            password += _this.characters.letters[_this.randomNumber(_this.characters.letters.length)];
-          }
-          // If only numbers
-          if(!_this.settings.letters && _this.settings.numbers && !_this.settings.special){
-            password += _this.randomNumber(9);
-          }
-          // If letters & numbers
-          if(_this.settings.letters && _this.settings.numbers && !_this.settings.special){
-            let chooseChar = _this.randomNumber(2);
-            console.log(chooseChar);
-            if(chooseChar === 1){
-              password += _this.characters.letters[_this.randomNumber(_this.characters.letters.length)];
-            } else {
-              password += _this.randomNumber(10);
-            }
-          }
-          // If letters & special
-          if(_this.settings.letters && !_this.settings.numbers && _this.settings.special){
-            let chooseChar = _this.randomNumber(2);
-            console.log(chooseChar);
-            if(chooseChar === 1){
-              password += _this.characters.special[_this.randomNumber(_this.characters.special.length)];
-            } else {
-              password += _this.characters.letters[_this.randomNumber(_this.characters.letters.length)];
-            }
-          }
-          // If numbers & special
-          if(!_this.settings.letters && _this.settings.numbers && _this.settings.special){
-            let chooseChar = _this.randomNumber(2);
-            console.log(chooseChar);
-            if(chooseChar === 1){
-              password += _this.characters.special[_this.randomNumber(_this.characters.special.length)];
-            } else {
-              password += _this.randomNumber(10);
-            }
-          }
-          // If letters & numbers & special chars
-          if(_this.settings.letters && _this.settings.numbers && _this.settings.special){
-            let chooseChar = _this.randomNumber(3);
-            console.log(chooseChar);
-            if(chooseChar === 1){
-              password += _this.characters.letters[_this.randomNumber(_this.characters.letters.length)];
-            } else if (chooseChar === 2) {
-              password += _this.characters.special[_this.randomNumber(_this.characters.special.length)];
-            } else {
-              password += _this.randomNumber(10);
-            }
-          }
-          i++;
-        }
-        return password;
-      }
-    },
-    mounted(){
-      let _this = this;
-      _this.password = _this.generatePassword(_this);
-    },
-    watch:{
+export default {
+  data() {
+    return {
+      isCopied: false,
+      password: "",
       settings: {
-        handler: function(after, before){
-          let _this = this;
-          _this.password = _this.generatePassword(_this);
-          console.log('hoi');
+        letters: true,
+        letters_total: 100,
+        numbers: false,
+        numbers_total: 0,
+        special: false,
+        totalChars: 8,
+        capitals: 0
+      },
+      characters: {
+        letters: [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "g",
+          "h",
+          "i",
+          "j",
+          "k",
+          "l",
+          "m",
+          "n",
+          "o",
+          "p",
+          "v",
+          "q",
+          "v",
+          "r",
+          "s",
+          "t",
+          "u",
+          "v",
+          "v",
+          "w",
+          "v",
+          "x",
+          "y",
+          "z"
+        ],
+        vowel: ["a", "e", "i", "o", "u", "y"],
+        numbers: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+        special: [
+          "!",
+          "@",
+          "#",
+          "$",
+          "%",
+          "ˆ",
+          "&",
+          "*",
+          "(",
+          ")",
+          "?",
+          ">",
+          "<"
+        ]
+      }
+    };
+  },
+  methods: {
 
-        },
-        deep: true
-      },
-      'settings.numbers_total': function (newVal, oldVal){
-        this.settings.letters_total = (100 - newVal);
-      },
-      'settings.letters_total': function (newVal, oldVal){
-        this.settings.numbers_total = (100 - newVal);
-      },
-      'settings.letters': function (newVal, oldVal){
-        if(!newVal){
-          this.settings.numbers_total = 100;
-          this.settings.numbers = true;
+    randomNumber: function getRandomInt(max) {
+      let min = 0;
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    },
+    generatePassword: function(_this) {
+      let password = "";
+      let i = 0;
+      while (i < _this.settings.totalChars) {
+        let char = "";
+
+        // If only letters
+        if (
+          _this.settings.letters &&
+          !_this.settings.numbers &&
+          !_this.settings.special
+        ) {
+          password +=
+            _this.characters.letters[
+              _this.randomNumber(_this.characters.letters.length)
+            ];
         }
-      },
-      'settings.numbers': function (newVal, oldVal){
-        if(!newVal){
-          this.settings.letter_total = 100;
-          this.settings.letters = true;
+        // If only numbers
+        if (
+          !_this.settings.letters &&
+          _this.settings.numbers &&
+          !_this.settings.special
+        ) {
+          password += _this.randomNumber(9);
         }
+        // If letters & numbers
+        if (
+          _this.settings.letters &&
+          _this.settings.numbers &&
+          !_this.settings.special
+        ) {
+          let chooseChar = _this.randomNumber(2);
+          console.log(chooseChar);
+          if (chooseChar === 1) {
+            password +=
+              _this.characters.letters[
+                _this.randomNumber(_this.characters.letters.length)
+              ];
+          } else {
+            password += _this.randomNumber(10);
+          }
+        }
+        // If letters & special
+        if (
+          _this.settings.letters &&
+          !_this.settings.numbers &&
+          _this.settings.special
+        ) {
+          let chooseChar = _this.randomNumber(2);
+          console.log(chooseChar);
+          if (chooseChar === 1) {
+            password +=
+              _this.characters.special[
+                _this.randomNumber(_this.characters.special.length)
+              ];
+          } else {
+            password +=
+              _this.characters.letters[
+                _this.randomNumber(_this.characters.letters.length)
+              ];
+          }
+        }
+        // If numbers & special
+        if (
+          !_this.settings.letters &&
+          _this.settings.numbers &&
+          _this.settings.special
+        ) {
+          let chooseChar = _this.randomNumber(2);
+          console.log(chooseChar);
+          if (chooseChar === 1) {
+            password +=
+              _this.characters.special[
+                _this.randomNumber(_this.characters.special.length)
+              ];
+          } else {
+            password += _this.randomNumber(10);
+          }
+        }
+        // If letters & numbers & special chars
+        if (
+          _this.settings.letters &&
+          _this.settings.numbers &&
+          _this.settings.special
+        ) {
+          let chooseChar = _this.randomNumber(3);
+          console.log(chooseChar);
+          if (chooseChar === 1) {
+            password +=
+              _this.characters.letters[
+                _this.randomNumber(_this.characters.letters.length)
+              ];
+          } else if (chooseChar === 2) {
+            password +=
+              _this.characters.special[
+                _this.randomNumber(_this.characters.special.length)
+              ];
+          } else {
+            password += _this.randomNumber(10);
+          }
+        }
+        i++;
+      }
+      return password;
+    }
+  },
+  mounted() {
+    let _this = this;
+    _this.password = _this.generatePassword(_this);
+  },
+  watch: {
+    settings: {
+      handler: function(after, before) {
+        let _this = this;
+        _this.password = _this.generatePassword(_this);
+        console.log("hoi");
       },
+      deep: true
+    },
+    "settings.numbers_total": function(newVal, oldVal) {
+      this.settings.letters_total = 100 - newVal;
+    },
+    "settings.letters_total": function(newVal, oldVal) {
+      this.settings.numbers_total = 100 - newVal;
+    },
+    "settings.letters": function(newVal, oldVal) {
+      if (!newVal) {
+        this.settings.numbers_total = 100;
+        this.settings.numbers = true;
+      }
+    },
+    "settings.numbers": function(newVal, oldVal) {
+      if (!newVal) {
+        this.settings.letter_total = 100;
+        this.settings.letters = true;
+      }
     }
   }
+};
 </script>
 
 
@@ -217,6 +313,50 @@
   border: 2px solid color(Offwhite);
   font-size: grid(1);
   padding: 1em;
+  position: relative;
+  overflow: hidden;
+  .overlay {
+    background-color: color(Black, 0.5);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: transform 0 0.3s, opacity 0.3s;
+    button {
+      transform: translateY(-100vh);
+      &:nth-child(1) {
+        transition: transform 0.2s 0.2s;
+      }
+      &:nth-child(2) {
+        transition: transform 0.2s 0.4s;
+      }
+    }
+    &.copied{
+      background-color: color(Green);
+    }
+  }
+  &:hover {
+    .overlay {
+      opacity: 1;
+      transition: transform 0s, opacity 1s;
+      transform: translateY(0);
+      button {
+        &:nth-child(1) {
+          transition: transform 0.3s 0.3s;
+        }
+        &:nth-child(2) {
+          transition: transform 0.3s 0.6s;
+        }
+        transform: translateY(0);
+      }
+    }
+  }
 }
 .settings {
   &__column {
