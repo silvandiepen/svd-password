@@ -25,6 +25,9 @@ module.exports = {
       src: "~/plugins/svd-vue-components"
     },
     {
+      src: "~/plugins/svd-footer"
+    },
+    {
       src: "~/plugins/vue-clipboard"
     }
   ],

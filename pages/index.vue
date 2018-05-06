@@ -156,11 +156,11 @@ export default {
     };
   },
   methods: {
-    onCopy: function(e){
-      this.isCopied = true; 
+    onCopy: function(e) {
+      this.isCopied = true;
     },
-    onCopyLeave: function(e){
-      this.isCopied = false; 
+    onCopyLeave: function(e) {
+      this.isCopied = false;
     },
     randomNumber: function getRandomInt(max) {
       let min = 0;
@@ -319,6 +319,7 @@ export default {
   padding: 1em;
   position: relative;
   overflow: hidden;
+  font-family: courier;
   .overlay {
     background-color: color(Black, 0.5);
     position: absolute;
@@ -331,7 +332,7 @@ export default {
     justify-content: center;
     opacity: 0;
     transform: translateY(-100%);
-    transition: transform 0 0.3s, opacity 0.3s, background-color .3s;
+    transition: transform 0 0.3s, opacity 0.3s, background-color 0.3s;
     button {
       transform: translateY(-100vh);
       &:nth-child(1) {
@@ -341,25 +342,32 @@ export default {
         transition: transform 0.2s 0.4s;
       }
     }
-    &.copied{
-      background-color: color(Green,.5);
-      &,&:hover{
-        button{
-        transition: transform .2s; 
-         transform: translateY(-100vh);
+    &.copied {
+      background-color: color(Green, 0.5);
+      &,
+      &:hover {
+        button {
+          transition: transform 0.2s;
+          transform: translateY(-100vh);
         }
       }
-      h3{
-        position: absolute; left: 50%; top: 50%; transform: translate(-50%,50vh); width: 100%; text-align: center; color: white; 
-        text-shadow: .1rem .1rem .5rem color(Black,.25); 
-        animation: comeUp .3s .5s forwards;
-        @at-root{
+      h3 {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, 50vh);
+        width: 100%;
+        text-align: center;
+        color: white;
+        text-shadow: 0.1rem 0.1rem 0.5rem color(Black, 0.25);
+        animation: comeUp 0.3s 0.5s forwards;
+        @at-root {
           @keyframes comeUp {
-            0%{
-              transform: translate(-50%,50vh);
-            }            
-            100%{
-              transform: translate(-50%,-50%);
+            0% {
+              transform: translate(-50%, 50vh);
+            }
+            100% {
+              transform: translate(-50%, -50%);
             }
           }
         }
@@ -409,7 +417,7 @@ fieldset {
 }
 .error {
   background-color: color(Red, 0.2);
-  border:     1px solid color(Red, 0.5);
+  border: 1px solid color(Red, 0.5);
   padding: 1em;
   border-radius: 3px;
   font-size: 12px;
